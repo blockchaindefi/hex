@@ -1,8 +1,19 @@
 # Hex help tools
 
-### Short summary of Hex
+## What is this
 
-Hex is a project where you get more Hex Coin by locking them(stake them) for a fixed amount of time, see it as interest.
+Here are two programs that are useful along with Hex
+
+* hex_stake2day - ReStake your Hex to the same day, to take advantage of bigger pays better
+
+* hex_percentage_growth - Calculates how much X amount increases in Y days, on a Z year(365 days) base interest rate
+
+
+### What is Hex
+
+A short summary of Hex.
+
+Hex is a ERC20 coin on Ethereum blockchain, the project where you get more Hex Coin by locking them(stake them) for a fixed amount of time, see it as interest.
 All is done through a smart contract in the Etherium network, and you do all the interaction yourself, and you do not have to trust anyone.
 
 Read more at: [www.hex.win](https://www.hex.win/) [![Hex website](https://hex.win/img/logo.png)](https://hex.win/)
@@ -27,14 +38,13 @@ Easiest build like:
 gcc -o hex_stake2day hex_stake2day.c
 ```
 
-And put it in your PATH, there are no dependency.
+And put it in your PATH, there are no dependency. Hopefully you know how this works :)
+
 
 Or just run from where you built, in one line:
 ```bash
 gcc -o hex_stake2day hex_stake2day.c && ./hex_stake2day 468
 ```
-
-Hopefully you know how this works :)
 
 
 ### A "real" example
@@ -49,7 +59,7 @@ hex_stake2day 468
 "Lock for   376  days.  The release date is: 2021-03-14"
 
 
-#### Regarding interest rate / "Longer Pays Better" and shares
+#### But is this relevant, interest rate / "Longer Pays Better" and shares
 
 Keep in mind that you get paid according to how many shares you have, and the inflation is in shares. Which gives a clear advantage to keep the stake for longer!
 
@@ -58,6 +68,60 @@ My guess is that the closer you can get to 150 million, the more benefit you hav
 And as always. **Draw your own conclusions!**
 
 **Don't trust anyone just because they can write 20 lines of C code :)**
+
+## hex_percentage_growth
+
+This is just a simple program to calculate how much an amount increases with something depending on the amount and percentage.
+
+Easiest build like:
+```bash
+g++ -o hex_percentage_growth hex_percentage_growth.cpp
+```
+
+And put it in your PATH, there are no dependency. Hopefully you know how this works :)
+
+
+Or just run from where you built, in one line:
+```bash
+g++ -o hex_percentage_growth hex_percentage_growth.cpp && ./hex_percentage_growth 365
+```
+
+Output:
+For the whole time (365):       12,000  diff: 2,000  16.67 %  20.00 %
+
+You can get help by starting the program with --help or -h, (or just one h)
+```bash
+hex_percentage_growth --help
+```
+
+```text
+The help
+ Count the percentage growth. The arg are:
+Argument 1
+ Number of days.
+ Or --help/-h for for the help (or just a h)
+Argument 2
+ Value amount. Default value: 10000
+ All, and 'ignored. And you can also expand a thousand and a million respectively with T and M. Ex 10T = 10000 and 2M = 2000000.
+ But this is just a quick fix, where M and T are replaced with 0's, so 1.2T becomes 1.2000
+Argument 3
+ Percentage /year. Default value: 0.2
+ If you set the percentage it will be used. Otherwise there is a sloppy calculation of the increase of the percent depending on the amount added.
+Argument 4
+ Year days used in the percent calculation. Default value: 365
+ I suspect you will never want to change this, but you can do.
+```
+
+A example, stake for 730 days  for 6 million hex  at a 23 percentage interest:
+```bash
+hex_percentage_growth 730 6M 0.23
+```
+
+A example, stake for 350 days  for 55 thousand hex  at a 40 percentage interest:
+```bash
+hex_percentage_growth 350 55T 0.4
+```
+
 
 
 ## FAQ
