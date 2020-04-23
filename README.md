@@ -105,7 +105,7 @@ Argument 2
  All, and 'ignored. And you can also expand a thousand and a million respectively with T and M. Ex 10T = 10000 and 2M = 2000000.
  But this is just a quick fix, where M and T are replaced with 0's, so 1.2T becomes 1.2000
 Argument 3
- Percentage /year. Default value: 0.2
+ Percentage /year. Default value: 0.08
  If you set the percentage it will be used. Otherwise there is a sloppy calculation of the increase of the percent depending on the amount added.
 Argument 4
  Year days used in the percent calculation. Default value: 365

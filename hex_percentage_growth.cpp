@@ -9,8 +9,7 @@
 #include <algorithm>
 #include <math.h>
 
-#define HEX_BASE_PERCENT 0.2
-
+#define HEX_BASE_PERCENT 0.08
 using namespace std;
 
 /**
