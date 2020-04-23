@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <iomanip>
+#include <algorithm>
 #include <math.h>
 
 #define HEX_BASE_PERCENT 0.2
@@ -37,13 +38,16 @@ private:
 
 /**
  * This is a somewhat sloppy calculation of the increase of the percent depending on the amount
- * ToDo: Make this more scalable
+ *
+ * To be scalable use:
+ * bonus = (input * (min(input, 150e6)/1500e6)
+ * From: https://medium.com/@jimmypomerleau/intro-d37b5b720487
  */
 static double get_interest_from_amount(double amount)
 {
-	double interest = HEX_BASE_PERCENT;
-	for (double levels = 15000000 - 1 ; levels < 150000000 && levels < amount ; levels += 15000000, interest += .01);
-	return interest;
+	const double max_amount = std::min(amount,  150000000.0);
+	const double bonus = amount * (max_amount / 1500000000.0);
+	return (bonus / amount) + HEX_BASE_PERCENT;
 }
 
 static void add_number_separator(string &text)
