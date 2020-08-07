@@ -1,7 +1,7 @@
 /**
  * This i use to calculates how much X amount increases in Y days, on a Z year(365 days) base interest rate
  *
- * This is Copyright under the GNU General Public License
+ * This code is Copyright 2020 under the GNU General Public License
  */
 
 #include <iostream>

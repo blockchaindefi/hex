@@ -1,7 +1,7 @@
 /**
  * This i use to ReStake your Hex to use the bigger pays better bonus
  *
- * This is Copyright under the GNU General Public License
+ * This code is Copyright 2020 under the GNU General Public License
  */
 
 #include <stdio.h>
