@@ -8,9 +8,46 @@
 #include <iomanip>
 #include <algorithm>
 #include <math.h>
+#include <unistd.h>
 
-#define HEX_BASE_PERCENT 0.08
+#define CONVERT_PROCENT2DECIMAL(x) ((x) * 0.01)
+#define CONVERT_DECIMAL2PROCENT(x) ((x) * 100.0)
+
+#define HEX_ANNUAL_INFLATION  3.69
+
+// This is the % I think will be reasonable as defult future stake level   ¯\_(ツ)_/¯
+#define HEX_DEFULT_STAKING_LEVEL 60.0
+#define HEX_DEFULT_INTEREST (CONVERT_PROCENT2DECIMAL(HEX_ANNUAL_INFLATION) / CONVERT_PROCENT2DECIMAL(HEX_DEFULT_STAKING_LEVEL))
+
+int  opt_year_days = 365;
+
 using namespace std;
+
+
+static void print_help(const char *s = nullptr)
+{
+	cerr << " Count the percentage growth. The arg are:" << endl
+		<< "  (There is otherwise a sloppy calculation of the increase of the percent depending on the amount added)" << endl
+		<< " arg1  Number of days to stake." << endl
+		<< " arg2  Value amount. You can use T M B (or t m b) as thousand, million and billion. All , and ' will be removed" << endl
+		<< "Settings opt:" << endl
+		<< " -p  Percentage /year  Default is: " << CONVERT_DECIMAL2PROCENT(HEX_DEFULT_INTEREST)
+		<< "  That is based on that " << HEX_DEFULT_STAKING_LEVEL << " % of all Hex are staked" << endl
+		<< " -d  Year days used in the percent calculation. Default value: " << opt_year_days << "  (Probably nothing you want to change)"<< endl
+		<< " -h  This help" << endl
+		<< endl
+		<< "And of course these are just guesses!" << endl
+		<< "Even with a perfect calculation, there is much else that affects the \"interest rate\" in Hex" << endl;
+
+	if(s)
+		cerr << "ERROR: " << s << endl;
+}
+
+static void print_help_exit(const char *s = nullptr)
+{
+	print_help(s);
+	exit(0);
+}
 
 /**
  * 1,2^(1.0/365.0)
@@ -46,7 +83,7 @@ static double get_interest_from_amount(double amount)
 {
 	const double max_amount = std::min(amount,  150000000.0);
 	const double bonus = amount * (max_amount / 1500000000.0);
-	return (bonus / amount) + HEX_BASE_PERCENT;
+	return (bonus / amount) + HEX_DEFULT_INTEREST;
 }
 
 static void add_number_separator(string &text)
@@ -103,24 +140,37 @@ static void convert_value_str(string &value)
 
 static void run(int argc, char *argv[])
 {
-	int days = 0;
+	int option_char, days = 0;
 	double amount = 10000;
-	double percentage = HEX_BASE_PERCENT;
-	int year_days = 365;
+	double percentage = 0.0;
 
-	if(argc <= 1 || string(argv[1]).find("h") != string::npos) {
-		cerr << " Count the percentage growth. The arg are:" << endl
-			<< " Number of days.  Or --help/-h for for this help" << endl
-			<< " Value amount. Default value: " << amount << endl
-			<< " Percentage /year. Default value: " << percentage << endl
-			<< "  (There is otherwise a sloppy calculation of the increase of the percent depending on the amount added)" << endl
-			<< " Year days used in the percent calculation. Default value: " << year_days << endl;
-		if(argc <= 1)
-			throw EXIT_FAILURE;
-		throw EXIT_SUCCESS;
+	while((option_char = getopt(argc,argv,"hp:d:")) != -1)
+	{
+		switch(option_char)
+		{
+		case 'h':
+			print_help_exit();
+		break;
+
+		case 'p':
+			percentage = CONVERT_PROCENT2DECIMAL(stod(optarg));
+		break;
+
+		case 'd':
+			opt_year_days = atoi(optarg);
+		break;
+
+		default:
+			print_help_exit("Unknown option detected!\n");
+		}
 	}
 
-	int arg_count = 1;
+	int arg_count = optind;
+
+	if(arg_count >= argc) {
+		print_help_exit("No arg");
+	}
+
 	days = stoi(argv[arg_count]);
 
 	++arg_count;
@@ -130,24 +180,16 @@ static void run(int argc, char *argv[])
 		amount = stod(value);
 	}
 
-	percentage = get_interest_from_amount(amount);
+	if(0.0 == percentage)
+		percentage = get_interest_from_amount(amount);
 
-	++arg_count;
-	if(argc > arg_count) {
-		percentage = stod(argv[arg_count]);
-	}
-
-	++arg_count;
-	if(argc > arg_count)
-		year_days = stoi(argv[arg_count]);
-
-	percentCalculation calculat(percentage, year_days);
+	percentCalculation calculat(percentage, opt_year_days);
 
 	double calculated_amount = calculat.getCountPercent(days) * amount;
 	cout << "For interest for " << days << " days at " << percentage << " % compound, new  amount: " << setw(12) << std::fixed << std::setprecision(2)
 		<< add_number_separator(calculated_amount) << "  difference: " << add_number_separator(calculated_amount - amount) << endl
-		<< std::setprecision(4) << " Increase by " << ((calculated_amount / amount) - 1.0) * 100.0 << " %"
-		<< "  (count back percent " << (1.0 -	(amount / calculated_amount)) * 100.0 << " %)" << endl;
+		<< std::setprecision(4) << " Increase by " << CONVERT_DECIMAL2PROCENT((calculated_amount / amount) - 1.0) << " %"
+		<< "  (count back percent " << CONVERT_DECIMAL2PROCENT(1.0 - (amount / calculated_amount)) << " %)" << endl;
 }
 
 int main(int argc, char *argv[])
