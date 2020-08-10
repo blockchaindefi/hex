@@ -10,6 +10,8 @@
 #include <math.h>
 #include <unistd.h>
 
+#include "stake_bonus.h"
+
 #define CONVERT_PROCENT2DECIMAL(x) ((x) * 0.01)
 #define CONVERT_DECIMAL2PROCENT(x) ((x) * 100.0)
 
@@ -21,6 +23,7 @@
 
 int  opt_year_days = 365;
 int opt_verbose = 0;
+bool opt_use_hex_bounus = true;
 
 using namespace std;
 
@@ -28,7 +31,6 @@ using namespace std;
 static void print_help(const char *s = nullptr)
 {
 	cerr << " Count the percentage growth. The arg are:" << endl
-		<< "  (There is otherwise a sloppy calculation of the increase of the percent depending on the amount added)" << endl
 		<< " arg1  Number of days to stake." << endl
 		<< " arg2  Value amount. You can use T M B (or t m b) as thousand, million and billion. All , and ' will be removed" << endl
 		<< "Settings opt:" << endl
@@ -37,6 +39,7 @@ static void print_help(const char *s = nullptr)
 		<< " -t  The total Hex amont. Used to calculate the percentages, both this and -l must be used" << endl
 		<< " -l  The lock  Hex amont. Used to calculate the percentages, both this and -t must be used" << endl
 		<< " -d  Year days used in the percent calculation. Default value: " << opt_year_days << "  (Probably nothing you want to change)"<< endl
+		<< " -n  Do not calculate with the Hex bonus" << endl
 		<< " -v  Verbose = print more, can use twice for even more info" << endl
 		<< " -h  This help" << endl
 		<< endl
@@ -51,43 +54,6 @@ static void print_help_exit(const char *s = nullptr)
 {
 	print_help(s);
 	exit(0);
-}
-
-/**
- * 1,2^(1.0/365.0)
- * 10000×1,000499…^365
- */
-class percentCalculation
-{
-public:
-	explicit percentCalculation(double percent, double days = 365)
-	: m_percent(percent)
-	, m_days(days)
-	{ }
-
-	// 1,2^(1÷365)
-	inline double getCountPercent(int counts = 1)
-	{
-		return pow(1.0 + m_percent, static_cast<double>(counts) / m_days);
-	}
-
-private:
-	double m_percent;
-	double m_days;
-};
-
-/**
- * This is a somewhat sloppy calculation of the increase of the percent depending on the amount
- *
- * To be scalable use:
- * bonus = (input * (min(input, 150e6)/1500e6)
- * From: https://medium.com/@jimmypomerleau/intro-d37b5b720487
- */
-static double get_interest_from_amount(double amount)
-{
-	const double max_amount = std::min(amount,  150000000.0);
-	const double bonus = amount * (max_amount / 1500000000.0);
-	return (bonus / amount) + HEX_DEFULT_INTEREST;
 }
 
 static void add_number_separator(string &text)
@@ -142,6 +108,50 @@ static void convert_value_str(string &value)
 		replace_string(value, a.from, a.to);
 }
 
+
+/**
+ * 1,2^(1.0/365.0)
+ * 10000×1,000499…^365
+ */
+class percentCalculation
+{
+public:
+	percentCalculation() = delete;
+
+	percentCalculation(uint days, double amount, double percent)
+	: m_amount(amount)
+	, m_percent(percent)
+	, m_days(days)
+	{ }
+
+	// 1,2^(1÷365)
+	inline double getCountPercent(int counts = 1)
+	{
+		return pow(1.0 + m_percent, static_cast<double>(counts) / opt_year_days);
+	}
+
+	double getNewAmount()
+	{
+		double hex_bonus = 0.0;
+		if(opt_use_hex_bounus)
+		{
+			hex_bonus = stakeStartBonusHex(m_amount, m_days);
+			if(opt_verbose)
+				cout << std::fixed << "Bounus Hex added: " << add_number_separator(hex_bonus) << "    Use stacke amount " << add_number_separator(m_amount + hex_bonus) << endl;
+		}
+
+		double calculated_amount_base = (getCountPercent(m_days) * (m_amount + hex_bonus));
+		double calculated_amount = calculated_amount_base - hex_bonus;
+		return calculated_amount;
+	}
+
+private:
+	double m_amount;
+	double m_percent;
+	uint m_days;
+};
+
+
 static void run(int argc, char *argv[])
 {
 	int option_char, days = 0;
@@ -149,7 +159,7 @@ static void run(int argc, char *argv[])
 	double percentage = HEX_DEFULT_INTEREST;
 	double hex_total = 0.0, hex_lock = 0.0;
 
-	while((option_char = getopt(argc,argv,"ht:l:p:d:v")) != -1)
+	while((option_char = getopt(argc,argv,"ht:l:p:d:vn")) != -1)
 	{
 		switch(option_char)
 		{
@@ -175,6 +185,10 @@ static void run(int argc, char *argv[])
 
 		case 'v':
 			opt_verbose++;
+		break;
+
+		case 'n':
+			opt_use_hex_bounus = false;
 		break;
 
 		default:
@@ -209,16 +223,13 @@ static void run(int argc, char *argv[])
 		amount = stod(value);
 	}
 
-	if(0.0 == percentage)
-		percentage = get_interest_from_amount(amount);
 
-	percentCalculation calculat(percentage, opt_year_days);
+	percentCalculation calculat(days, amount, percentage);
+	double new_amount = calculat.getNewAmount();
 
-	double calculated_amount = calculat.getCountPercent(days) * amount;
-	cout << "For interest for " << days << " days at " << percentage << " % compound, new  amount: " << setw(12) << std::fixed << std::setprecision(2)
-		<< add_number_separator(calculated_amount) << "  difference: " << add_number_separator(calculated_amount - amount) << endl
-		<< std::setprecision(4) << " Increase by " << CONVERT_DECIMAL2PROCENT((calculated_amount / amount) - 1.0) << " %"
-		<< "  (count back percent " << CONVERT_DECIMAL2PROCENT(1.0 - (amount / calculated_amount)) << " %)" << endl;
+	cout << std::fixed << "Stake: " << add_number_separator(amount) << "  for days " << days << "   should increased to: " << add_number_separator(new_amount) << "  Hex" << endl;
+	if(opt_verbose)
+		cout << "The diffrens is " << add_number_separator(new_amount - amount) << "  or " << std::setprecision(3) << CONVERT_DECIMAL2PROCENT((new_amount / amount) - 1.0) << " %" << endl;
 }
 
 int main(int argc, char *argv[])
