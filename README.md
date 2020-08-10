@@ -6,7 +6,7 @@ Here are two programs that are useful along with Hex
 
 * hex_stake2day - ReStake your Hex to the same day, to take advantage of bigger pays better
 
-* hex_percentage_growth - Calculates how much X amount increases in Y days, on a Z year(365 days) base interest rate
+* hex_percentage_growth - Calculates how much X amount increases in Y days, and other options
 
 
 ### What is Hex
@@ -65,6 +65,8 @@ Keep in mind that you get paid according to how many shares you have, and the in
 
 My guess is that the closer you can get to 150 million, the more benefit you have. So if you will never(within a reasonable time) have access to more than 10-50 million Hex, the advantage is probably quite low.
 
+**Update: After improvements in the hex_percentage_growth program, it is clearer that longer pays better affects the increase significantly more than biger pays better.**
+
 And as always. **Draw your own conclusions!**
 
 **Don't trust anyone just because they can write 20 lines of C code :)**
@@ -87,39 +89,38 @@ g++ -o hex_percentage_growth hex_percentage_growth.cpp && ./hex_percentage_growt
 ```
 
 Output:
-For the whole time (365):       12,000  diff: 2,000  16.67 %  20.00 %
+Stake: 10,000  for days 365   should increased to: 10,738  Hex
 
-You can get help by starting the program with --help or -h, (or just one h)
+You can get help by starting the program with -h
 ```bash
-hex_percentage_growth --help
+hex_percentage_growth -h
 ```
 
 ```text
-The help
  Count the percentage growth. The arg are:
-Argument 1
- Number of days.
- Or --help/-h for for the help (or just a h)
-Argument 2
- Value amount. Default value: 10000
- All, and 'ignored. And you can also expand a thousand and a million respectively with T and M. Ex 10T = 10000 and 2M = 2000000.
- But this is just a quick fix, where M and T are replaced with 0's, so 1.2T becomes 1.2000
-Argument 3
- Percentage /year. Default value: 0.08
- If you set the percentage it will be used. Otherwise there is a sloppy calculation of the increase of the percent depending on the amount added.
-Argument 4
- Year days used in the percent calculation. Default value: 365
- I suspect you will never want to change this, but you can do.
+ arg1  Number of days to stake.
+ arg2  Value amount. You can use T M B (or t m b) as thousand, million and billion. All , and ' will be removed
+Settings opt:
+ -p  Percentage /year  Default is: 6.15  That is based on that 60 % of all Hex are staked
+ -t  The total Hex amont. Used to calculate the percentages, both this and -l must be used
+ -l  The lock  Hex amont. Used to calculate the percentages, both this and -t must be used
+ -d  Year days used in the percent calculation. Default value: 365  (Probably nothing you want to change)
+ -n  Do not calculate with the Hex bonus
+ -v  Verbose = print more, can use twice for even more info
+ -h  This help
+
+And of course these are just guesses!
+Even with a perfect calculation, there is much else that affects the "interest rate" in Hex
 ```
 
 A example, stake for 730 days  for 6 million hex  at a 23 percentage interest:
 ```bash
-hex_percentage_growth 730 6M 0.23
+hex_percentage_growth 730 6M -p 23
 ```
 
 A example, stake for 350 days  for 55 thousand hex  at a 40 percentage interest:
 ```bash
-hex_percentage_growth 350 55T 0.4
+hex_percentage_growth 350 55T -p 40
 ```
 
 
@@ -129,7 +130,7 @@ hex_percentage_growth 350 55T 0.4
 ### Wouldn't this have been better as a web service.
 
 Yes, but I'm a lowlevel programmer, and so don't do web solutions.
-I create this because I had the need myself, and thought others with maybe
+I create this because I had the need myself, and thought others with may appreciate it.
 
 
 ## Likes / dislikes, suggestions for improvements etc.
