@@ -1,6 +1,6 @@
 /*
  * More information about Hex
- * https://hex.win
+ * https://hex.com
  *
  * This code is strongly inspired by the function _stakeStartBonusHearts() in the Hex solidity contract
  * See:

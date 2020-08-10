@@ -16,7 +16,7 @@ A short summary of Hex.
 Hex is a ERC20 coin on Ethereum blockchain, the project where you get more Hex Coin by locking them(stake them) for a fixed amount of time, see it as interest.
 All is done through a smart contract in the Etherium network, and you do all the interaction yourself, and you do not have to trust anyone.
 
-Read more at: [www.hex.win](https://www.hex.win/) [![Hex website](https://hex.win/img/logo.png)](https://hex.win/)
+Read more at: [www.hex.com](https://www.hex.com/) [![Hex website](https://hex.com/img/logo.png)](https://hex.com/)
 
 
 ## hex_stake2day - ReStake your Hex for bigger pays better
@@ -138,7 +138,7 @@ And if this helped you, send some HEX or ETH to:
 0xc48AFd489CBB8Cd9F87f20152A3aE2e556734ad6
 
 Or use my referral link
-[https://go.hex.win/?r=0xc48AFd489CBB8Cd9F87f20152A3aE2e556734ad6](https://go.hex.win/?r=0xc48AFd489CBB8Cd9F87f20152A3aE2e556734ad6)
+[https://go.hex.com/?r=0xc48AFd489CBB8Cd9F87f20152A3aE2e556734ad6](https://go.hex.com/?r=0xc48AFd489CBB8Cd9F87f20152A3aE2e556734ad6)
 
 Contact me:
 myhex2020@gmail.com
