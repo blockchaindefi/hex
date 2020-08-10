@@ -20,6 +20,7 @@
 #define HEX_DEFULT_INTEREST (CONVERT_PROCENT2DECIMAL(HEX_ANNUAL_INFLATION) / CONVERT_PROCENT2DECIMAL(HEX_DEFULT_STAKING_LEVEL))
 
 int  opt_year_days = 365;
+int opt_verbose = 0;
 
 using namespace std;
 
@@ -33,7 +34,10 @@ static void print_help(const char *s = nullptr)
 		<< "Settings opt:" << endl
 		<< " -p  Percentage /year  Default is: " << CONVERT_DECIMAL2PROCENT(HEX_DEFULT_INTEREST)
 		<< "  That is based on that " << HEX_DEFULT_STAKING_LEVEL << " % of all Hex are staked" << endl
+		<< " -t  The total Hex amont. Used to calculate the percentages, both this and -l must be used" << endl
+		<< " -l  The lock  Hex amont. Used to calculate the percentages, both this and -t must be used" << endl
 		<< " -d  Year days used in the percent calculation. Default value: " << opt_year_days << "  (Probably nothing you want to change)"<< endl
+		<< " -v  Verbose = print more, can use twice for even more info" << endl
 		<< " -h  This help" << endl
 		<< endl
 		<< "And of course these are just guesses!" << endl
@@ -142,14 +146,23 @@ static void run(int argc, char *argv[])
 {
 	int option_char, days = 0;
 	double amount = 10000;
-	double percentage = 0.0;
+	double percentage = HEX_DEFULT_INTEREST;
+	double hex_total = 0.0, hex_lock = 0.0;
 
-	while((option_char = getopt(argc,argv,"hp:d:")) != -1)
+	while((option_char = getopt(argc,argv,"ht:l:p:d:v")) != -1)
 	{
 		switch(option_char)
 		{
 		case 'h':
 			print_help_exit();
+		break;
+
+		case 't':
+			hex_total = stod(optarg);
+		break;
+
+		case 'l':
+			hex_lock = stod(optarg);
 		break;
 
 		case 'p':
@@ -160,12 +173,28 @@ static void run(int argc, char *argv[])
 			opt_year_days = atoi(optarg);
 		break;
 
+		case 'v':
+			opt_verbose++;
+		break;
+
 		default:
 			print_help_exit("Unknown option detected!\n");
 		}
 	}
 
 	int arg_count = optind;
+
+	if(HEX_DEFULT_INTEREST == percentage && hex_total && hex_lock) {
+		if(hex_lock > hex_total)
+			print_help_exit("Wrong total Hex  lock > total");
+		percentage = CONVERT_PROCENT2DECIMAL(HEX_ANNUAL_INFLATION) / (hex_lock / hex_total);
+		if(opt_verbose > 1) {
+			cout << "Total Hex amont: " << setw(16) << add_number_separator(hex_total) << endl;
+			cout << "Lock  Hex amont: " << setw(16) << add_number_separator(hex_lock) << endl;
+		}
+		if(opt_verbose)
+			cout << "The amount of Hex staket: " << CONVERT_DECIMAL2PROCENT(hex_lock / hex_total) << " %   Calculate yearly \"interest\": " << CONVERT_DECIMAL2PROCENT(percentage) << " %" << endl;
+	}
 
 	if(arg_count >= argc) {
 		print_help_exit("No arg");
