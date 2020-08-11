@@ -30,22 +30,6 @@ hex_stake2day  is a program to facilitate this.
 
 Just enter the Endday you want to stack for, and you get the number of days and what date this is.
 
-This is a simple C program. And I assume you use or at least have access to some Linux/Unix.
-If you only use Windows, you are probably beyond all help anyway and do not deserve to use this program :)
-
-Easiest build like:
-```bash
-gcc -o hex_stake2day hex_stake2day.c
-```
-
-And put it in your PATH, there are no dependency. Hopefully you know how this works :)
-
-
-Or just run from where you built, in one line:
-```bash
-gcc -o hex_stake2day hex_stake2day.c && ./hex_stake2day 468
-```
-
 
 ### A "real" example
 
@@ -75,19 +59,10 @@ And as always. **Draw your own conclusions!**
 
 This is just a simple program to calculate how much an amount increases with something depending on the amount and percentage.
 
-Easiest build like:
+Run for ex
 ```bash
-g++ -o hex_percentage_growth hex_percentage_growth.cpp
+hex_percentage_growth 365
 ```
-
-And put it in your PATH, there are no dependency. Hopefully you know how this works :)
-
-
-Or just run from where you built, in one line:
-```bash
-g++ -o hex_percentage_growth hex_percentage_growth.cpp && ./hex_percentage_growth 365
-```
-
 Output:
 Stake: 10,000  for days 365   should increased to: 10,738  Hex
 
@@ -123,6 +98,23 @@ A example, stake for 350 days  for 55 thousand hex  at a 40 percentage interest:
 hex_percentage_growth 350 55T -p 40
 ```
 
+
+## Basic setup
+
+This are simple C respective C++ program. And I assume you use or at least have access to some Linux/Unix.
+
+If you only use Windows, you are probably beyond all help :)
+
+Install gcc and git, git clone this, build and setup(add hex/bin to your PATH):
+```bash
+apt-get install build-essential git
+git clone https://github.com/blockchaindefi/hex.git
+cd hex
+make
+PATH=$PATH:$(pwd)/bin
+```
+
+There are no other dependency. Hopefully you know how this works :)
 
 
 ## FAQ
