@@ -58,7 +58,7 @@ static void print_help_exit(const char *s = nullptr)
 
 static void add_number_separator(string &text)
 {
-	int pos = 0;
+	size_t pos = 0;
 	for (; pos < text.size() && '.' != text[pos]; ++pos);
 
 	for (int i = 0; pos ; --pos, ++i)
