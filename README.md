@@ -88,12 +88,17 @@ And of course these are just guesses!
 Even with a perfect calculation, there is much else that affects the "interest rate" in Hex
 ```
 
-A example, stake for 730 days  for 6 million hex  at a 23 percentage interest:
+A example, stake 200 thousand hex for 1000 days, at the defult 6.15 percentage interest:
+```bash
+hex_percentage_growth 1000 200t
+```
+
+Stake 6 million hex for 730 days, at a 23 percentage interest:
 ```bash
 hex_percentage_growth 730 6M -p 23
 ```
 
-A example, stake for 350 days  for 55 thousand hex  at a 40 percentage interest:
+Stake 55 thousand hex for 350 days, at a 40 percentage interest:
 ```bash
 hex_percentage_growth 350 55T -p 40
 ```
