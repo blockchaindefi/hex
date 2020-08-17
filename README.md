@@ -8,6 +8,8 @@ Here are two programs that are useful along with Hex
 
 * hex_percentage_growth - Calculates how much X amount increases in Y days, and other options
 
+* hex_get_percentage_growth.sh - A script that call hex_percentage_growth, but download and set the total and locked options
+
 
 ### What is Hex
 
@@ -102,6 +104,28 @@ Stake 55 thousand hex for 350 days, at a 40 percentage interest:
 ```bash
 hex_percentage_growth 350 55T -p 40
 ```
+
+
+## hex_get_percentage_growth.sh
+
+This is a bash script that call hex_percentage_growth to use the current staking percentage.
+It download and set the total and locked options on hex_percentage_growth  i övrigt kan alla andra options användas på samma sätt som för hex_percentage_growth.
+Total and locked amount is saved for reuse, after 2 hours the latest data is downloaded again.
+
+Same example as above, but now with current percentage automatically calculated.
+
+A example, stake 6 million hex for 730 days:
+```bash
+hex_percentage_growth 730 6M
+```
+
+Stake 55 thousand hex for 350 days:
+```bash
+hex_percentage_growth 350 55T
+```
+
+Of course this is based on the staking level right now, this will of course change.
+
 
 
 ## Basic setup
