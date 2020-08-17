@@ -108,11 +108,13 @@ hex_percentage_growth 350 55T -p 40
 
 This are simple C respective C++ program. And I assume you use or at least have access to some Linux/Unix.
 
-If you only use Windows, you are probably beyond all help :)
+This should work on other unix machines, and a Mac as well.
+
+But if you only use Windows, you are probably beyond all help :)
 
 Install gcc and git, git clone this, build and setup(add hex/bin to your PATH):
 ```bash
-apt-get install build-essential git
+sudo apt-get install build-essential git
 git clone https://github.com/blockchaindefi/hex.git
 cd hex
 make
