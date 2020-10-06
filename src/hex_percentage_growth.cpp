@@ -227,7 +227,8 @@ static void run(int argc, char *argv[])
 	percentCalculation calculat(days, amount, percentage);
 	double new_amount = calculat.getNewAmount();
 
-	cout << std::fixed << "Stake: " << add_number_separator(amount) << "  for days " << days << "   should increased to: " << add_number_separator(new_amount) << "  Hex" << endl;
+	cout << std::fixed << "Stake: " << add_number_separator(amount) << "  for days " << days;
+	cout << std::setprecision(1) << " (" << days / 365.25 << " years)  should increased to: " << add_number_separator(new_amount) << "  Hex" << endl;
 	if(opt_verbose)
 		cout << "The diffrens is " << add_number_separator(new_amount - amount) << "  or " << std::setprecision(3) << CONVERT_DECIMAL2PROCENT((new_amount / amount) - 1.0) << " %" << endl;
 }

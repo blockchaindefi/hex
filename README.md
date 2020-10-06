@@ -66,7 +66,7 @@ Run for ex
 hex_percentage_growth 365
 ```
 Output:
-Stake: 10,000  for days 365   should increased to: 10,738  Hex
+Stake: 10,000  for days 365 (1.0 years)  should increased to: 10,738  Hex
 
 You can get help by starting the program with -h
 ```bash
