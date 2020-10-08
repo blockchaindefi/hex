@@ -116,12 +116,12 @@ Same example as above, but now with current percentage automatically calculated.
 
 A example, stake 6 million hex for 730 days:
 ```bash
-hex_percentage_growth 730 6M
+hex_get_percentage_growth.sh 730 6M
 ```
 
-Stake 55 thousand hex for 350 days:
+Stake 55 thousand hex for 350 days, with maximum verbose formation:
 ```bash
-hex_percentage_growth 350 55T
+hex_get_percentage_growth.sh -v -v 350 55T
 ```
 
 Of course this is based on the staking level right now, this will of course change.
