@@ -7,6 +7,7 @@
 #include <iostream>
 #include <iomanip>
 #include <algorithm>
+#include <sstream>
 #include <math.h>
 #include <unistd.h>
 
