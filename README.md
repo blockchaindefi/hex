@@ -97,12 +97,12 @@ hex_percentage_growth 1000 200t
 
 Stake 6 million hex for 730 days, at a 23 percentage interest:
 ```bash
-hex_percentage_growth 730 6M -p 23
+hex_percentage_growth -p 23 730 6M
 ```
 
 Stake 55 thousand hex for 350 days, at a 40 percentage interest:
 ```bash
-hex_percentage_growth 350 55T -p 40
+hex_percentage_growth -p 40 350 55T
 ```
 
 
