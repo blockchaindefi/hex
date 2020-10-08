@@ -8,7 +8,7 @@ Here are two programs that are useful along with Hex
 
 * hex_percentage_growth - Calculates how much X amount increases in Y days, and other options
 
-* hex_get_percentage_growth.sh - A script that call hex_percentage_growth, but download and set the total and locked options
+* hex_get_percentage_growth.sh - A script that call hex_percentage_growth, but downloads and set the total and locked options
 
 
 ### What is Hex
@@ -16,7 +16,7 @@ Here are two programs that are useful along with Hex
 A short summary of Hex.
 
 Hex is a ERC20 coin on Ethereum blockchain, the project where you get more Hex Coin by locking them(stake them) for a fixed amount of time, see it as interest.
-All is done through a smart contract in the Etherium network, and you do all the interaction yourself, and you do not have to trust anyone.
+All is done through a smart contract on the Ethereum network, and you do all the interaction yourself, and you do not have to trust anyone.
 
 Read more at: [www.hex.com](https://www.hex.com/) [![Hex website](https://hex.com/img/logo.png)](https://hex.com/)
 
@@ -25,7 +25,7 @@ Read more at: [www.hex.com](https://www.hex.com/) [![Hex website](https://hex.co
 
 A partly overlooked fact with Hex is that we can raise the interest rate from the normal 20% to a maximum of 30% by stake more at once, to reach the maximum 30% you need at least 150 million Hex.
 
-This is unattainable for many, as most have bought in significantly smaller sums.
+This is unattainable for many, as most have bought in significantly smaller amounts.
 So the goal I propose is to have all new Hex Stake closed on the same day, so they can re-stake together as a big jumbo stake.
 
 hex_stake2day  is a program to facilitate this.
@@ -49,9 +49,9 @@ hex_stake2day 468
 
 Keep in mind that you get paid according to how many shares you have, and the inflation is in shares. Which gives a clear advantage to keep the stake for longer!
 
-My guess is that the closer you can get to 150 million, the more benefit you have. So if you will never(within a reasonable time) have access to more than 10-50 million Hex, the advantage is probably quite low.
+My guess is that the closer you can get to 150 million, the more you'll benefit. So if you will never(within a reasonable time) have access to more than 10-50 million Hex, the advantage is probably quite low.
 
-**Update: After improvements in the hex_percentage_growth program, it is clearer that longer pays better affects the increase significantly more than biger pays better.**
+**Update: After improvements in the hex_percentage_growth program, it is clearer that longer pays better affects the increase significantly more than bigger pays better.**
 
 And as always. **Draw your own conclusions!**
 
@@ -66,7 +66,7 @@ Run for ex
 hex_percentage_growth 365
 ```
 Output:
-Stake: 10,000  for days 365 (1.0 years)  should increased to: 10,738  Hex
+Stake: 10,000  for days 365 (1.0 years)  should have increased to: 10,738  Hex
 
 You can get help by starting the program with -h
 ```bash
@@ -108,8 +108,8 @@ hex_percentage_growth 350 55T -p 40
 
 ## hex_get_percentage_growth.sh
 
-This is a bash script that call hex_percentage_growth to use the current staking percentage.
-It download and set the total and locked options on hex_percentage_growth  i övrigt kan alla andra options användas på samma sätt som för hex_percentage_growth.
+This is a bash script that calls hex_percentage_growth to use the current staking percentage.
+It downloads and sets the total and locked options on hex_percentage_growth.
 Total and locked amount is saved for reuse, after 2 hours the latest data is downloaded again.
 
 Same example as above, but now with current percentage automatically calculated.
@@ -130,7 +130,7 @@ Of course this is based on the staking level right now, this will of course chan
 
 ## Basic setup
 
-This are simple C respective C++ program. And I assume you use or at least have access to some Linux/Unix.
+This are simple C respective C++ programs. And I assume you use or at least have access to some Linux/Unix.
 
 This should work on other unix machines, and a Mac as well.
 
@@ -153,7 +153,7 @@ There are no other dependency. Hopefully you know how this works :)
 ### Wouldn't this have been better as a web service.
 
 Yes, but I'm a lowlevel programmer, and so don't do web solutions.
-I create this because I had the need myself, and thought others with may appreciate it.
+I created this because I had the need myself, and thought others might appreciate it.
 
 
 ## Likes / dislikes, suggestions for improvements etc.
