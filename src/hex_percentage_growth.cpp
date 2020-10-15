@@ -19,7 +19,7 @@
 #define HEX_ANNUAL_INFLATION  3.69
 
 // This is the % I think will be reasonable as defult future stake level   ¯\_(ツ)_/¯
-#define HEX_DEFULT_STAKING_LEVEL 60.0
+#define HEX_DEFULT_STAKING_LEVEL 40.0
 #define HEX_DEFULT_INTEREST (CONVERT_PROCENT2DECIMAL(HEX_ANNUAL_INFLATION) / CONVERT_PROCENT2DECIMAL(HEX_DEFULT_STAKING_LEVEL))
 
 int  opt_year_days = 365;

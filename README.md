@@ -78,7 +78,7 @@ hex_percentage_growth -h
  arg1  Number of days to stake.
  arg2  Value amount. You can use T M B (or t m b) as thousand, million and billion. All , and ' will be removed
 Settings opt:
- -p  Percentage /year  Default is: 6.15  That is based on that 60 % of all Hex are staked
+ -p  Percentage /year  Default is: 9.225  That is based on that 40 % of all Hex are staked
  -t  The total Hex amont. Used to calculate the percentages, both this and -l must be used
  -l  The lock  Hex amont. Used to calculate the percentages, both this and -t must be used
  -d  Year days used in the percent calculation. Default value: 365  (Probably nothing you want to change)
