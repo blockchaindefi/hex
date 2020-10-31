@@ -17,6 +17,7 @@
 #define CONVERT_DECIMAL2PROCENT(x) ((x) * 100.0)
 
 #define HEX_ANNUAL_INFLATION  3.69
+#define HEX_MAX_STAKE_DAYS 5555
 
 // This is the % I think will be reasonable as defult future stake level   ¯\_(ツ)_/¯
 #define HEX_DEFULT_STAKING_LEVEL 40.0
@@ -216,6 +217,14 @@ static void run(int argc, char *argv[])
 	}
 
 	days = stoi(argv[arg_count]);
+	if(days < 1) {
+		print_help_exit("You have staked < 1 days");
+	}
+	if(opt_use_hex_bounus && days > HEX_MAX_STAKE_DAYS) {
+		cout << "Warning: You can't stack more than " << HEX_MAX_STAKE_DAYS
+		<< " days in hex.  " << days << " days is too much. Changed to " << HEX_MAX_STAKE_DAYS << endl;
+		days = HEX_MAX_STAKE_DAYS;
+	}
 
 	++arg_count;
 	if(argc > arg_count) {
