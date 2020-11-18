@@ -161,9 +161,6 @@ I created this because I had the need myself, and thought others might appreciat
 And if this helped you, send some HEX or ETH to:
 0xc48AFd489CBB8Cd9F87f20152A3aE2e556734ad6
 
-Or use my referral link
-[https://go.hex.com/?r=0xc48AFd489CBB8Cd9F87f20152A3aE2e556734ad6](https://go.hex.com/?r=0xc48AFd489CBB8Cd9F87f20152A3aE2e556734ad6)
-
 Contact me:
 myhex2020@gmail.com
 
