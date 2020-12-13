@@ -148,6 +148,13 @@ PATH=$PATH:$(pwd)/bin
 There are no other dependency. Hopefully you know how this works :)
 
 
+## Video
+
+I made a video that shows how to install and use hex_percentage_growth
+
+https://www.youtube.com/watch?v=WCXGE1FkFiY
+
+
 ## FAQ
 
 ### Wouldn't this have been better as a web service.
