@@ -22,7 +22,7 @@
 #define HEX_MAX_STAKE_DAYS 5555
 
 // This is the % I think will be reasonable as defult future stake level   ¯\_(ツ)_/¯
-#define HEX_DEFULT_STAKING_LEVEL 40.0
+#define HEX_DEFULT_STAKING_LEVEL 20.0
 #define HEX_DEFULT_INTEREST (CONVERT_PROCENT2DECIMAL(HEX_ANNUAL_INFLATION) / CONVERT_PROCENT2DECIMAL(HEX_DEFULT_STAKING_LEVEL))
 
 int opt_verbose = 0;
