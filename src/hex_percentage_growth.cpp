@@ -11,6 +11,8 @@
 #include <cmath>
 #include <unistd.h>
 
+typedef long double my_double_t;
+
 #include "stake_bonus.h"
 
 #define CONVERT_PROCENT2DECIMAL(x) ((x) * 0.01)
@@ -70,7 +72,7 @@ static void add_number_separator(string &text)
 	}
 }
 
-static string add_number_separator(double value)
+static string add_number_separator(my_double_t value)
 {
 	stringstream stream;
 	stream << std::fixed << std::setprecision(0) << value;
@@ -120,21 +122,21 @@ class percentCalculation
 public:
 	percentCalculation() = delete;
 
-	percentCalculation(uint days, double amount, double percent)
+	percentCalculation(uint days, my_double_t amount, my_double_t percent)
 	: m_amount(amount)
 	, m_percent(percent)
 	, m_days(days)
 	{ }
 
 	// 1,2^(1÷365)
-	inline double getCountPercent(int counts = 1)
+	inline my_double_t getCountPercent(int counts = 1) const
 	{
-		return pow(1.0 + m_percent, static_cast<double>(counts) / YEAR_DAYS);
+		return pow(1.0 + m_percent, static_cast<my_double_t>(counts) / YEAR_DAYS);
 	}
 
-	double getNewAmount()
+	my_double_t getNewAmount() const
 	{
-		double hex_bonus = 0.0;
+		my_double_t hex_bonus = 0.0;
 		if(opt_use_hex_bounus)
 		{
 			hex_bonus = stakeStartBonusHex(m_amount, m_days);
@@ -142,24 +144,24 @@ public:
 				cout << std::fixed << "Bounus Hex added: " << add_number_separator(hex_bonus) << "    Use stacke amount " << add_number_separator(m_amount + hex_bonus) << endl;
 		}
 
-		double calculated_amount_base = (getCountPercent(m_days) * (m_amount + hex_bonus));
-		double calculated_amount = calculated_amount_base - hex_bonus;
+		my_double_t calculated_amount_base = (getCountPercent(m_days) * (m_amount + hex_bonus));
+		my_double_t calculated_amount = calculated_amount_base - hex_bonus;
 		return calculated_amount;
 	}
 
 private:
-	double m_amount;
-	double m_percent;
-	uint m_days;
+	const my_double_t m_amount;
+	const my_double_t m_percent;
+	const uint m_days;
 };
 
 
 static void run(int argc, char *argv[])
 {
 	int option_char, days = 0;
-	double amount = 10000;
-	double percentage = HEX_DEFULT_INTEREST;
-	double hex_total = 0.0, hex_lock = 0.0;
+	my_double_t amount = 10000;
+	my_double_t percentage = HEX_DEFULT_INTEREST;
+	my_double_t hex_total = 0.0, hex_lock = 0.0;
 
 	while((option_char = getopt(argc,argv,"ht:l:p:vn")) != -1)
 	{
@@ -231,7 +233,7 @@ static void run(int argc, char *argv[])
 
 
 	percentCalculation calculat(days, amount, percentage);
-	double new_amount = calculat.getNewAmount();
+	my_double_t new_amount = calculat.getNewAmount();
 
 	cout << std::fixed << "Stake: " << add_number_separator(amount) << "  for days " << days;
 	cout << std::setprecision(1) << " (" << days / YEAR_DAYS << " years)  should have increased to: " << add_number_separator(new_amount) << "  Hex" << endl;
