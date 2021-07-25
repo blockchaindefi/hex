@@ -8,13 +8,15 @@
 #include <iomanip>
 #include <algorithm>
 #include <sstream>
-#include <math.h>
+#include <cmath>
 #include <unistd.h>
 
 #include "stake_bonus.h"
 
 #define CONVERT_PROCENT2DECIMAL(x) ((x) * 0.01)
 #define CONVERT_DECIMAL2PROCENT(x) ((x) * 100.0)
+
+#define YEAR_DAYS 365.0
 
 #define HEX_ANNUAL_INFLATION  3.69
 #define HEX_MAX_STAKE_DAYS 5555
@@ -23,7 +25,6 @@
 #define HEX_DEFULT_STAKING_LEVEL 40.0
 #define HEX_DEFULT_INTEREST (CONVERT_PROCENT2DECIMAL(HEX_ANNUAL_INFLATION) / CONVERT_PROCENT2DECIMAL(HEX_DEFULT_STAKING_LEVEL))
 
-int  opt_year_days = 365;
 int opt_verbose = 0;
 bool opt_use_hex_bounus = true;
 
@@ -40,7 +41,6 @@ static void print_help(const char *s = nullptr)
 		<< "  That is based on that " << HEX_DEFULT_STAKING_LEVEL << " % of all Hex are staked" << endl
 		<< " -t  The total Hex amont. Used to calculate the percentages, both this and -l must be used" << endl
 		<< " -l  The lock  Hex amont. Used to calculate the percentages, both this and -t must be used" << endl
-		<< " -d  Year days used in the percent calculation. Default value: " << opt_year_days << "  (Probably nothing you want to change)"<< endl
 		<< " -n  Do not calculate with the Hex bonus" << endl
 		<< " -v  Verbose = print more, can use twice for even more info" << endl
 		<< " -h  This help" << endl
@@ -129,7 +129,7 @@ public:
 	// 1,2^(1÷365)
 	inline double getCountPercent(int counts = 1)
 	{
-		return pow(1.0 + m_percent, static_cast<double>(counts) / opt_year_days);
+		return pow(1.0 + m_percent, static_cast<double>(counts) / YEAR_DAYS);
 	}
 
 	double getNewAmount()
@@ -161,7 +161,7 @@ static void run(int argc, char *argv[])
 	double percentage = HEX_DEFULT_INTEREST;
 	double hex_total = 0.0, hex_lock = 0.0;
 
-	while((option_char = getopt(argc,argv,"ht:l:p:d:vn")) != -1)
+	while((option_char = getopt(argc,argv,"ht:l:p:vn")) != -1)
 	{
 		switch(option_char)
 		{
@@ -179,10 +179,6 @@ static void run(int argc, char *argv[])
 
 		case 'p':
 			percentage = CONVERT_PROCENT2DECIMAL(stod(optarg));
-		break;
-
-		case 'd':
-			opt_year_days = atoi(optarg);
 		break;
 
 		case 'v':
@@ -238,7 +234,7 @@ static void run(int argc, char *argv[])
 	double new_amount = calculat.getNewAmount();
 
 	cout << std::fixed << "Stake: " << add_number_separator(amount) << "  for days " << days;
-	cout << std::setprecision(1) << " (" << days / 365.25 << " years)  should have increased to: " << add_number_separator(new_amount) << "  Hex" << endl;
+	cout << std::setprecision(1) << " (" << days / YEAR_DAYS << " years)  should have increased to: " << add_number_separator(new_amount) << "  Hex" << endl;
 	if(opt_verbose)
 		cout << "The diffrens is " << add_number_separator(new_amount - amount) << "  or " << std::setprecision(3) << CONVERT_DECIMAL2PROCENT((new_amount / amount) - 1.0) << " %" << endl;
 }
