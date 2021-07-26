@@ -29,6 +29,7 @@ typedef long double my_double_t;
 
 int opt_verbose = 0;
 bool opt_use_hex_bounus = true;
+bool opt_use_hex_increase = true;
 
 using namespace std;
 
@@ -43,7 +44,8 @@ static void print_help(const char *s = nullptr)
 		<< "  That is based on that " << HEX_DEFULT_STAKING_LEVEL << " % of all Hex are staked" << endl
 		<< " -t  The total Hex amont. Used to calculate the percentages, both this and -l must be used" << endl
 		<< " -l  The lock  Hex amont. Used to calculate the percentages, both this and -t must be used" << endl
-		<< " -n  Do not calculate with the Hex bonus" << endl
+		<< " -n  Do NOT calculate with the Hex bonus" << endl
+		<< " -i  Do NOT calculate with the Hex increase inflation by " << HEX_ANNUAL_INFLATION << " %" << endl
 		<< " -v  Verbose = print more, can use twice for even more info" << endl
 		<< " -h  This help" << endl
 		<< endl
@@ -174,7 +176,8 @@ public:
 
 		for (uint loop_days = 1; loop_days <= m_days; ++loop_days) {
 			calculated_amount += calculated_amount_daily_increase * procent_per_dag;
-			calculated_amount_daily_increase *= hexDailyInterestRate;
+			if(opt_use_hex_increase)
+				calculated_amount_daily_increase *= hexDailyInterestRate;
 		}
 
 		return calculated_amount - hex_bonus;
@@ -194,7 +197,7 @@ static void run(int argc, char *argv[])
 	my_double_t percentage = HEX_DEFULT_INTEREST;
 	my_double_t hex_total = 0.0, hex_lock = 0.0;
 
-	while((option_char = getopt(argc,argv,"ht:l:p:vn")) != -1)
+	while((option_char = getopt(argc,argv,"ht:l:p:vni")) != -1)
 	{
 		switch(option_char)
 		{
@@ -220,6 +223,10 @@ static void run(int argc, char *argv[])
 
 		case 'n':
 			opt_use_hex_bounus = false;
+		break;
+
+		case 'i':
+			opt_use_hex_increase = false;
 		break;
 
 		default:
