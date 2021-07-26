@@ -113,10 +113,6 @@ static void convert_value_str(string &value)
 }
 
 
-/**
- * 1,2^(1.0/365.0)
- * 10000×1,000499…^365
- */
 class percentCalculation
 {
 public:
@@ -128,25 +124,60 @@ public:
 	, m_days(days)
 	{ }
 
-	// 1,2^(1÷365)
+	/**
+	 * 1,2^(1.0/365.0)
+	 * 10000×1,000499…^365
+	 */
 	inline my_double_t getCountPercent(int counts = 1) const
 	{
 		return pow(1.0 + m_percent, static_cast<my_double_t>(counts) / YEAR_DAYS);
 	}
 
-	my_double_t getNewAmount() const
+	my_double_t getCompoundInterest() const
 	{
+		const my_double_t hex_bonus = getHexBonus();
+		const my_double_t calculated_amount_base = (getCountPercent(m_days) * (m_amount + hex_bonus));
+		return calculated_amount_base - hex_bonus;
+	}
+
+	my_double_t getHexBonus() const
+	{
+		static bool print_bonus = true;
 		my_double_t hex_bonus = 0.0;
 		if(opt_use_hex_bounus)
 		{
 			hex_bonus = stakeStartBonusHex(m_amount, m_days);
-			if(opt_verbose)
+			if(opt_verbose && print_bonus) {
 				cout << std::fixed << "Bounus Hex added: " << add_number_separator(hex_bonus) << "    Use stacke amount " << add_number_separator(m_amount + hex_bonus) << endl;
+				print_bonus = false;
+			}
+		}
+		return hex_bonus;
+	}
+
+	/*
+	 * See the comment in function _dailyRoundCalc() in the Hex contract
+	 * https://etherscan.io/address/0x2b591e99afe9f32eaa6214f7b7629768c40eeb39#code
+	 */
+	my_double_t getDailyInterestRate(my_double_t interest) const
+	{
+		return exp(log(1.0 + interest) / 364.0) - 1.0;
+	}
+
+	my_double_t getNewAmount() const
+	{
+		const my_double_t hex_bonus = getHexBonus();
+		const my_double_t hexDailyInterestRate = getDailyInterestRate(0.0369) + 1.0;
+		const my_double_t procent_per_dag = getDailyInterestRate(m_percent);
+		my_double_t calculated_amount = m_amount + hex_bonus;
+		my_double_t calculated_amount_daily_increase = calculated_amount;
+
+		for (uint loop_days = 1; loop_days <= m_days; ++loop_days) {
+			calculated_amount += calculated_amount_daily_increase * procent_per_dag;
+			calculated_amount_daily_increase *= hexDailyInterestRate;
 		}
 
-		my_double_t calculated_amount_base = (getCountPercent(m_days) * (m_amount + hex_bonus));
-		my_double_t calculated_amount = calculated_amount_base - hex_bonus;
-		return calculated_amount;
+		return calculated_amount - hex_bonus;
 	}
 
 private:
