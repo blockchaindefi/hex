@@ -30,6 +30,7 @@ typedef long double my_double_t;
 int opt_verbose = 0;
 bool opt_use_hex_bounus = true;
 bool opt_use_hex_increase = true;
+bool opt_use_compound_interest = false;
 
 using namespace std;
 
@@ -46,6 +47,7 @@ static void print_help(const char *s = nullptr)
 		<< " -l  The lock  Hex amont. Used to calculate the percentages, both this and -t must be used" << endl
 		<< " -n  Do NOT calculate with the Hex bonus" << endl
 		<< " -i  Do NOT calculate with the Hex increase inflation by " << HEX_ANNUAL_INFLATION << " %" << endl
+		<< " -c  Use pure compound interest instead (This is not what Hex does)" << endl
 		<< " -v  Verbose = print more, can use twice for even more info" << endl
 		<< " -h  This help" << endl
 		<< endl
@@ -168,6 +170,8 @@ public:
 
 	my_double_t getNewAmount() const
 	{
+		if (opt_use_compound_interest)
+			return getCompoundInterest();
 		const my_double_t hex_bonus = getHexBonus();
 		const my_double_t hexDailyInterestRate = getDailyInterestRate(0.0369) + 1.0;
 		const my_double_t procent_per_dag = getDailyInterestRate(m_percent);
@@ -197,7 +201,7 @@ static void run(int argc, char *argv[])
 	my_double_t percentage = HEX_DEFULT_INTEREST;
 	my_double_t hex_total = 0.0, hex_lock = 0.0;
 
-	while((option_char = getopt(argc,argv,"ht:l:p:vni")) != -1)
+	while((option_char = getopt(argc,argv,"ht:l:p:vnic")) != -1)
 	{
 		switch(option_char)
 		{
@@ -227,6 +231,10 @@ static void run(int argc, char *argv[])
 
 		case 'i':
 			opt_use_hex_increase = false;
+		break;
+
+		case 'c':
+			opt_use_compound_interest = true;
 		break;
 
 		default:
